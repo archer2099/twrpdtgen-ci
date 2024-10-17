@@ -1,0 +1,116 @@
+name: TwrpDtGen-CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      IMAGE_URL:
+        description: 'IMAGE_URL'
+        required: true
+        default: ''
+      IMAGE_TYPE:
+        description: 'IMAGE_TYPE'
+        required: true
+        default: 'recovery'
+        type: choice
+        options:
+        - recovery
+        - boot
+        - vendor_boot
+
+jobs:
+  build:
+    if: github.event.repository.owner.id == github.event.sender.id
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+
+    steps:
+    - name: Check Out
+      uses: actions/checkout@v4
+
+    - name: Prepare the environment
+      run: |
+        sudo apt -y install git python3 python3-pip cpio curl wget p7zip-full
+        pip install twrpdtgen --break-system-packages
+name: TwrpDtGen-CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      IMAGE_URL:
+        description: 'IMAGE_URL'
+        required: true
+        default: ''
+      IMAGE_TYPE:
+        description: 'IMAGE_TYPE'
+        required: true
+        default: 'recovery'
+        type: choice
+        options:
+        - recovery
+        - boot
+        - vendor_boot
+
+jobs:
+  build:
+    if: github.event.repository.owner.id == github.event.sender.id
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+
+    steps:
+    - name: Check Out
+      uses: actions/checkout@v4
+
+    - name: Prepare the environment
+      run: |
+        sudo apt -y install git python3 python3-pip cpio curl wget p7zip-full
+        pip install twrpdtgen --break-system-packages
+
+    - name: Download Image
+      run: |
+        wget ${{ github.event.inputs.IMAGE_URL }}
+
+    - name: Genrate DeviceTree
+      run: |
+        python3 -m twrpdtgen ${{ github.event.inputs.IMAGE_TYPE }}.img
+
+    - name: Add to Zip
+      run: |
+        cd ${GITHUB_WORKSPACE}/output
+        7z a twrpdtgen-output.zip *
+
+    - name: Publish to GitHub
+      uses: softprops/action-gh-release@v1
+      with:
+        files: /home/runner/work/twrpdtgen-action/twrpdtgen-action/output/twrpdtgen-output.zip
+        name: Release
+        tag_name: ${{ github.run_id }}
+        body: |
+          Genrate Image Type : ${{ github.event.inputs.IMAGE_TYPE }} 
+      env:
+        GITHUB_TOKEN: ${{ secrets.TEST }}
+
+    - name: Download Image
+      run: |
+        wget ${{ github.event.inputs.IMAGE_URL }}
+
+    - name: Genrate DeviceTree
+      run: |
+        python3 -m twrpdtgen ${{ github.event.inputs.IMAGE_TYPE }}.img
+
+    - name: Add to Zip
+      run: |
+        cd ${GITHUB_WORKSPACE}/output
+        7z a TWRPDTGEN-OUT.zip *
+
+    - name: Publish to GitHub
+      uses: softprops/action-gh-release@v1
+      with:
+        files: /home/runner/work/TWRPDTGEN-CI/TWRPDTGEN-CI/output/TWRPDTGEN-OUT.zip
+        name: Release
+        tag_name: ${{ github.run_id }}
+        body: |
+          Genrate Image Type : ${{ github.event.inputs.IMAGE_TYPE }} 
+      env:
+        GITHUB_TOKEN: ${{ secrets.TEST }}
