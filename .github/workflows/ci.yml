@@ -50,9 +50,9 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: /home/runner/work/twrpdtgen-ci/twrpdtgen-ci/output/twrpdtgen-output.zip
-        name: release
+        name: Release
         tag_name: ${{ github.run_id }}
         body: |
-          Genrate Image Type : ${{ github.event.inputs.IMAGE_TYPE }} 
+          Image Type : ${{ github.event.inputs.IMAGE_TYPE }} 
       env:
         GITHUB_TOKEN: ${{ secrets.TEST }}
