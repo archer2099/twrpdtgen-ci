@@ -1,4 +1,4 @@
-name: TwrpDtGen-CI
+name: twrpdtgen-ci
 
 on:
   workflow_dispatch:
@@ -44,13 +44,13 @@ jobs:
     - name: Add to Zip
       run: |
         cd ${GITHUB_WORKSPACE}/output
-        7z a TWRPDTGEN-OUT.zip *
+        7z a twrpdtgen-output.zip *
 
     - name: Publish to GitHub
       uses: softprops/action-gh-release@v1
       with:
-        files: /home/runner/work/TWRPDTGEN-CI/TWRPDTGEN-CI/output/TWRPDTGEN-OUT.zip
-        name: Release
+        files: /home/runner/work/twrpdtgen-ci/twrpdtgen-ci/output/twrpdtgen-output.zip
+        name: release
         tag_name: ${{ github.run_id }}
         body: |
           Genrate Image Type : ${{ github.event.inputs.IMAGE_TYPE }} 
