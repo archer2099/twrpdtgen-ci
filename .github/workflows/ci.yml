@@ -35,7 +35,7 @@ jobs:
         
     - name: Download Image
       run: |
-        wget ${{ github.event.inputs.IMAGE_URL }}
+        wget -O ${{ github.event.inputs.IMAGE_TYPE }}.img ${{ github.event.inputs.IMAGE_URL }}
 
     - name: Genrate DeviceTree
       run: |
