@@ -30,21 +30,21 @@ jobs:
 
     - name: Prepare the environment
       run: |
-        sudo apt -y install git python3 python3-pip cpio curl wget p7zip-full lolcat
+        sudo apt -y install git python3 python3-pip cpio curl wget p7zip-full
         pip install twrpdtgen --break-system-packages
         
     - name: Download Image
       run: |
-        wget -O ${{ github.event.inputs.IMAGE_TYPE }}.img ${{ github.event.inputs.IMAGE_URL }} | lolcat
+        wget -O ${{ github.event.inputs.IMAGE_TYPE }}.img ${{ github.event.inputs.IMAGE_URL }}
 
     - name: Genrate DeviceTree
       run: |
-        python3 -m twrpdtgen ${{ github.event.inputs.IMAGE_TYPE }}.img | lolcat
+        python3 -m twrpdtgen ${{ github.event.inputs.IMAGE_TYPE }}.img
 
     - name: Add to Zip
       run: |
         cd ${GITHUB_WORKSPACE}/output
-        7z a twrpdtgen-output.zip * | lolcat
+        7z a twrpdtgen-output.zip *
 
     - name: Publish to GitHub
       uses: softprops/action-gh-release@v1
